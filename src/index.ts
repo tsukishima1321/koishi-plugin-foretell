@@ -20,7 +20,7 @@ export const Config = Schema.object({
   style: Schema.object({
     fontFamily: Schema.string().default('"SimHei"')
       .description('字体（参照 CSS 中的 [font-family](https://developer.mozilla.org/zh-CN/docs/Web/CSS/font-family) ）'),
-    maxFontSize: Schema.number().min(1).default(80).description('最大字体大小（px）'),
+    maxFontSize: Schema.number().min(1).default(55).description('最大字体大小（px）'),
     minFontSize: Schema.number().min(1).default(38).description('最小字体大小（px）'),
     offsetWidth: Schema.number().min(1).default(900)
       .description('单行最大宽度（px），任意一行文本达到此宽度后会缩小字体以尽可能不超出此宽度，直到字体大小等于`minFontSize`'),
@@ -48,11 +48,11 @@ export function apply(ctx: Context, config: Config) {
   const bg = fs.readFileSync(path.resolve(__dirname, './small.png'))
   ctx.command('预言机')
     .action(async (_) => {
-      
+
       var id = Math.floor(Math.random() * tells.length)
       const res = await ctx.puppeteer.render(
         html({
-          text:tells[id].ch,
+          text: tells[id].ch,
           fontFamily: fontPath,
           fontColor: '#000000',
           strokeColor: '#000000',
@@ -111,7 +111,10 @@ function html(params: {
   <script>
     const dom = document.querySelector('body')
     const div = dom.querySelector('div')
-    let fontSize = 55
+    let fontSize = ${params.maxFontSize}
     dom.style.fontSize = fontSize + 'px'
+    while (div.offsetWidth >= ${params.offsetWidth} && fontSize > ${params.minFontSize}) {
+      dom.style.fontSize = --fontSize + 'px'
+    }
   </script>`
 }

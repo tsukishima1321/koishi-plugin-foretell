@@ -4,15 +4,15 @@
     <style>
         @font-face {
             font-family: myFont;
-            src: url('D:\\Develop\\koishi\\koishi\\koishi-app\\external\\foretell\\src\\fusion-pixel-12px-monospaced-zh_hans.ttf');
+            src: url('D:\\Develop\\koishi\\koishi-app\\external\\foretell\\src\\fusion-pixel-12px-monospaced-zh_hans.ttf');
         }
+
         body {
             width: 1100px;
-            height: 75px;
-            padding: 55 32;
+            height: 78px;
+            padding: 52 32;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
             text-align: center;
             margin: 0;
@@ -24,7 +24,7 @@
         }
 
         .shadow_text {
-            text-shadow:2px 0px 0px black;
+            text-shadow: 2px 0px 0px black;
             font-weight: normal;
             filter: blur(0.5px);
         }
@@ -37,8 +37,11 @@
 <script>
     const dom = document.querySelector('body')
     const div = dom.querySelector('div')
-    let fontSize = 50
+    let fontSize = 55
     dom.style.fontSize = fontSize + 'px'
+    while (div.offsetWidth >= 900 && fontSize > 38) {
+        dom.style.fontSize = --fontSize + 'px'
+    }
 </script>
 
 </html>
