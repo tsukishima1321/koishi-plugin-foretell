@@ -48,18 +48,19 @@ export function apply(ctx: Context, config: Config) {
   const bg = fs.readFileSync(path.resolve(__dirname, './small.png'))
   ctx.command('预言机')
     .action(async (_) => {
-
-      var id = Math.floor(Math.random() * tells.length)
+      const id = Math.floor(Math.random() * tells.length)
       const res = await ctx.puppeteer.render(
         html({
           text: tells[id].ch,
           fontFamily: fontPath,
-          fontColor: '#000000',
-          strokeColor: '#000000',
           maxFontSize: config.style.maxFontSize,
           minFontSize: config.style.minFontSize,
           offsetWidth: config.style.offsetWidth,
           img: bg,
+          width: 1100,
+          height: 78,
+          padding_x: 32,
+          padding_y: 52,
         })
       );
       return res;
@@ -69,12 +70,14 @@ export function apply(ctx: Context, config: Config) {
 function html(params: {
   text: string,
   fontFamily: string,
-  fontColor: string,
-  strokeColor: string,
   maxFontSize: number,
   minFontSize: number,
   offsetWidth: number,
   img: Buffer,
+  width: number,
+  height: number,
+  padding_x: number,
+  padding_y: number,
 }) {
   return `
   <head>
@@ -84,9 +87,9 @@ function html(params: {
             src: url('${params.fontFamily}');
       }
       body {
-        width: 1100px;
-        height: 78px;
-        padding: 52 32;
+        width: ${params.width}px;
+        height: ${params.height}px;
+        padding: ${params.padding_x} ${params.padding_y};
         display: flex;
         flex-direction: column;
         align-items: center;
