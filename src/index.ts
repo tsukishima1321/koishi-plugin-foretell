@@ -20,9 +20,9 @@ export const Config = Schema.object({
   style: Schema.object({
     fontFamily: Schema.string().default('"SimHei"')
       .description('字体（参照 CSS 中的 [font-family](https://developer.mozilla.org/zh-CN/docs/Web/CSS/font-family) ）'),
-    maxFontSize: Schema.number().min(1).default(55).description('最大字体大小（px）'),
-    minFontSize: Schema.number().min(1).default(38).description('最小字体大小（px）'),
-    offsetWidth: Schema.number().min(1).default(900)
+    maxFontSize: Schema.number().min(1).default(50).description('最大字体大小（px）'),
+    minFontSize: Schema.number().min(1).default(10).description('最小字体大小（px）'),
+    offsetWidth: Schema.number().min(1).default(440)
       .description('单行最大宽度（px），任意一行文本达到此宽度后会缩小字体以尽可能不超出此宽度，直到字体大小等于`minFontSize`'),
   }).description('目前没有用的设置')
 })
@@ -45,7 +45,7 @@ export function apply(ctx: Context, config: Config) {
     var tells: Tell[] = [{ en: "error", ch: "文件读取错误" }]
   }
   const fontPath = path.join(__dirname, 'fusion-pixel-12px-monospaced-zh_hans.ttf').split('\\').join('/')
-  const bg = fs.readFileSync(path.resolve(__dirname, './small.png'))
+  const bg = fs.readFileSync(path.resolve(__dirname, './short.jpg'))
   ctx.command('预言机')
     .action(async (_) => {
       const id = Math.floor(Math.random() * tells.length)
@@ -57,10 +57,8 @@ export function apply(ctx: Context, config: Config) {
           minFontSize: config.style.minFontSize,
           offsetWidth: config.style.offsetWidth,
           img: bg,
-          width: 1100,
-          height: 78,
-          padding_x: 32,
-          padding_y: 52,
+          width: 500,
+          height: 185,
         })
       );
       return res;
@@ -76,8 +74,6 @@ function html(params: {
   img: Buffer,
   width: number,
   height: number,
-  padding_x: number,
-  padding_y: number,
 }) {
   return `
   <head>
@@ -89,7 +85,6 @@ function html(params: {
       body {
         width: ${params.width}px;
         height: ${params.height}px;
-        padding: ${params.padding_x} ${params.padding_y};
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -100,8 +95,10 @@ function html(params: {
         color: '#000000';
         background-image: url(data:image/png;base64,${params.img.toString('base64')});
         background-repeat: no-repeat;
+        background-size: ${params.width}px ${params.height}px;
       }
       .shadow_text {
+        line-height: ${params.height}px;
         text-shadow: 2px 0px 0px black;
         font-weight: normal;
         filter: blur(0.5px);
