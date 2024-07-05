@@ -18,13 +18,11 @@ export interface Config {
 
 export const Config = Schema.object({
   style: Schema.object({
-    fontFamily: Schema.string().default('"SimHei"')
-      .description('字体（参照 CSS 中的 [font-family](https://developer.mozilla.org/zh-CN/docs/Web/CSS/font-family) ）'),
     maxFontSize: Schema.number().min(1).default(50).description('最大字体大小（px）'),
     minFontSize: Schema.number().min(1).default(10).description('最小字体大小（px）'),
     offsetWidth: Schema.number().min(1).default(440)
       .description('单行最大宽度（px），任意一行文本达到此宽度后会缩小字体以尽可能不超出此宽度，直到字体大小等于`minFontSize`'),
-  }).description('目前没有用的设置')
+  }).description('格式设置')
 })
 
 interface Tell {
