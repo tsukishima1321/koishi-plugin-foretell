@@ -1,0 +1,36 @@
+<html>
+
+<head>
+    <style>
+        @font-face {
+            font-family: myFont;
+            src: url('D:\\Develop\\koishi\\koishi-app\\external\\foretell\\src\\fusion-pixel-12px-monospaced-zh_hans.ttf');
+        }
+
+        body {
+            width: 300px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin: 0;
+            font-weight: 900;
+            font-family: "myFont";
+            color: '#000000';
+            background-image: url("short.jpg");
+            background-size: 300px 150px;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="data:image/png;base64,${params.img.toString('base64')}" />
+    <div>${params.name}</div>
+    <div>${params.des}</div>
+</body>
+<script>
+</script>
+
+</html>
