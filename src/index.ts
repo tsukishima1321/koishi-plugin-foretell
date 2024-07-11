@@ -250,7 +250,6 @@ function trinketsRender(params: {
         .down {
           font-size: 8px;
           padding-left: 5px;
-          padding-top: 5px;
           padding-bottom: 10px;
         }
 
