@@ -7,7 +7,7 @@ import { } from '@koishijs/cache'
 export const name = 'foretell'
 
 export const inject = {
-  required: ['cache','puppeteer'],
+  required: ['cache', 'puppeteer'],
   optional: [],
 }
 
@@ -23,8 +23,13 @@ interface StyleConfig {
   minFontSize: number
   offsetWidth: number
 }
+
+interface RandomConfig {
+  trinket: number
+}
 export interface Config {
   style: StyleConfig
+  random: RandomConfig
 }
 
 export const Config = Schema.object({
@@ -33,7 +38,10 @@ export const Config = Schema.object({
     minFontSize: Schema.number().min(1).default(10).description('最小字体大小（px）'),
     offsetWidth: Schema.number().min(1).default(440)
       .description('单行最大宽度（px），任意一行文本达到此宽度后会缩小字体以尽可能不超出此宽度，直到字体大小等于`minFontSize`'),
-  }).description('格式设置')
+  }).description('格式设置'),
+  random: Schema.object({
+    trinket: Schema.number().min(0).max(100).default(20).description('抽取到饰品的概率，0-100')
+  }).description('随机设置')
 })
 
 interface Tell {
@@ -96,20 +104,7 @@ export function apply(ctx: Context, config: Config) {
     .action(async ({ session }) => {
       while (1) {
         let random = Math.floor(Math.random() * 100)
-        if (random < 80) {
-          return await ctx.puppeteer.render(
-            tellRender({
-              text: tells[Math.floor(Math.random() * tells.length)].ch,
-              fontFamily: fontPath,
-              maxFontSize: config.style.maxFontSize,
-              minFontSize: config.style.minFontSize,
-              offsetWidth: config.style.offsetWidth,
-              img: tellBg,
-              width: 500,
-              height: 185,
-            })
-          )
-        } else {
+        if (random < config.random.trinket) {
           let guildId = session.guildId
           if (!guildId) {
             guildId = session.userId
@@ -147,6 +142,19 @@ export function apply(ctx: Context, config: Config) {
               img: fs.readFileSync(path.resolve(__dirname, `./trinkets/trinket_${padding(String(trinket.id), 3)}.png`)),
               name: trinket.name,
               des: trinket.des
+            })
+          )
+        } else {
+          return await ctx.puppeteer.render(
+            tellRender({
+              text: tells[Math.floor(Math.random() * tells.length)].ch,
+              fontFamily: fontPath,
+              maxFontSize: config.style.maxFontSize,
+              minFontSize: config.style.minFontSize,
+              offsetWidth: config.style.offsetWidth,
+              img: tellBg,
+              width: 500,
+              height: 185,
             })
           )
         }
@@ -243,12 +251,18 @@ function trinketsRender(params: {
         .top {
           display: flex;
           flex-direction: row;
-          line-height: 54px;
+          line-height: 64px;
           align-items: left;
+        }
+
+        .right {
+          padding-left: 5px;
         }
 
         .down {
           font-size: 8px;
+          line-height:10px;
+          padding-top: 5px;
           padding-left: 5px;
           padding-bottom: 10px;
         }
@@ -257,12 +271,15 @@ function trinketsRender(params: {
           width: 64px;
           height: 64px;
           margin-right: 2px;
+          border-style:solid;
+          border-width:2px;
+          border-color:black;
         }
     </style>
   </head>
   <body>
   <div class="top"><img src="data:image/png;base64,${params.img.toString('base64')}" />
-    <div>${params.name}</div>
+    <div class="right">${params.name}</div>
   </div>
   <div class="down">${des}</div>
   </body>
