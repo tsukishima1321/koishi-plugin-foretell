@@ -226,7 +226,7 @@ function trinketsRender(params: {
   let des = params.des
   const regex = /\{\{.*?\}\}/g;
   des = des.replace(regex, '');
-  des = des.replace('#', '<BR>· ')
+  des = des.replace(/#/g, '<BR>· ')
   des = "· " + des
   return `
   <head>
